@@ -82,9 +82,9 @@ export LATCLIP="[139:1:180]"  # [  33.96875 : 1 :  52.71875]
    export       DATASET="LOCA_NGP"
    export DATASETPREFIX="NGP_LOCA"
 
-   export CLIPPED_INDIR_ROOT="/maelstrom2/LOCA_GRIDDED_ENSEMBLES/LOCA_NGP/Northern_Great_Plains_Original_Subset"
+   export CLIPPED_OUTDIR_ROOT="/maelstrom2/LOCA_GRIDDED_ENSEMBLES/LOCA_NGP/Northern_Great_Plains_Original_Subset"
 
-
+   export CLIPPED_INDIR_ROOT="http://kyrill.ias.sdsmt.edu:8080/thredds/dodsC/LOCA_NGP/Northern_Great_Plains_Original_Subset"
 
 
 
@@ -139,7 +139,7 @@ do
 
            echo processing $CLIPPED_INPREFIX
 
-           export   CLIPPED_OUTDIR=${CLIPPED_INDIR_ROOT}/derived/${SCEN}/${NEWPAR}
+           export   CLIPPED_OUTDIR=${CLIPPED_OUTDIR_ROOT}/derived/${SCEN}/${NEWPAR}
 
            echo mkdir -p ${CLIPPED_OUTDIR}
 
@@ -163,7 +163,7 @@ do
            rm -frv ${OUTFILE}
 
            echo nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
-          nohup nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE} 
+          nohup nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
 
 
            ncrename -O -h -v ${INVAR},temporary  ${TEMPFILE}
