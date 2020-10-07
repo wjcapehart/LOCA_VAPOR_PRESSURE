@@ -103,7 +103,7 @@ do
 
            export   CLIPPED_OUTDIR=${CLIPPED_INDIR_ROOT}/derived/${SCEN}/${NEWPAR}
 
-           echo mkdir -pr ${CLIPPED_OUTDIR_ROOT}
+           echo mkdir -pr ${CLIPPED_OUTDIR}
 
            export INVAR=${PAR}_${ENS}_${SCEN}
            export OUTVAR=${NEWPAR}_${ENS}_${SCEN}
