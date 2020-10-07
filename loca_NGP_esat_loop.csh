@@ -100,10 +100,13 @@ export LATCLIP="[139:1:180]"  # [  33.96875 : 1 :  52.71875]
 for SCEN in "${SCENARIO[@]}"
 do
 
+
      if [[ SCEN == "historical" ]]  ; then
        export TIMECORDS=[0:1:20453]
+       echo historical ${TIMECORDS}
      else
        export TIMECORDS=[0:1:34332]
+       echo future ${TIMECORDS}
      fi
 
 
@@ -127,8 +130,12 @@ do
 
            if [[ PAR == "tasmax" ]]  ; then
              export NEWPAR="esatmax"
+             echo tasmax ${NEWPAR}
+
            else
              export NEWPAR="esatmin"
+             echo tasmin ${NEWPAR}
+
            fi
 
            echo
