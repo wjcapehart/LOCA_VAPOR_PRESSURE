@@ -44,6 +44,25 @@ then
    ##################
 
 
+      ### NCL COMMANDS TO FETCH GRIDCELLS BY LAT/LON
+      #
+      #   max_lat =  52.75 ; degrees north
+      #   min_lat =  34.00 ; degrees north
+      #   min_lon = -114.25 + 360 ; degrees east
+      #   max_lon =  -86.25 + 360 ; degrees east
+      #
+      #  deg_target = lon({max_lon})
+      # index_xx = ind(lon .eq. lon({max_lon}))
+      #  index_xn = ind(lon .eq. lon({min_lon}))
+      #  index_yx = ind(lat .eq. lat({max_lat}))
+      #  index_yn = ind(lat .eq. lat({min_lat}))
+      #  print("LONCLIP=  [" +  (index_xn) + ":1:" + (index_xx) + "] [" +  (lon(index_xn)-360) + ":1:" + (lon(index_xx)-360) + "]")
+      #  print("LATCLIP=  [" +  (index_yn) + ":1:" + (index_yx) + "] [" +  lat(index_yn) + ":1:" + lat(index_yx) + "]")
+      #
+      #
+      ##################
+
+
 
    ### NGP
    export LONCLIP="[187:1:636]"  # [-114.28125 : 1 : -86.28125]
