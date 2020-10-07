@@ -85,6 +85,7 @@ export LATCLIP="[139:1:180]"  # [  33.96875 : 1 :  52.71875]
    export CLIPPED_OUTDIR_ROOT="/maelstrom2/LOCA_GRIDDED_ENSEMBLES/LOCA_NGP/Northern_Great_Plains_Original_Subset"
 
    export CLIPPED_INDIR_ROOT="http://kyrill.ias.sdsmt.edu:8080/thredds/dodsC/LOCA_NGP/Northern_Great_Plains_Original_Subset"
+   export CLIPPED_INDIR_ROOT="/maelstrom2/LOCA_GRIDDED_ENSEMBLES/LOCA_NGP/Northern_Great_Plains_Original_Subset"
 
 
 
@@ -165,13 +166,13 @@ do
            echo
 
            rm -frv ${TEMPFILE}
-           rm -frv ${TEMPFILE}
            rm -frv ${TEMPFILESHORT}
            rm -frv ${OUTFILE}
 
-           echo nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
-           nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
+           #echo nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
+           #      nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
 
+           ncks -d lat,42.65625,45.21875 -d lon,-106.09375,-101.21875 ${INFILE} ${TEMPFILE}
 
            ncrename -O -h -v ${INVAR},temporary  ${TEMPFILE}
            ncatted -h -O -a units,temporary,m,c,"Pa" ${TEMPFILE}
@@ -179,10 +180,10 @@ do
            ncatted -h -O -a standard_name,temporary,m,c,"water_vapor_partial_pressure_in_air_at_saturation"  ${TEMPFILE}
 
            if [ PAR == "tasmax" ]  ; then
-             ncatted -h -O -a long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
+             ncatted -h -O -a   long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
              ncatted -h -O -a description,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
            else
-             ncatted -h -O -a long_name,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
+             ncatted -h -O -a   long_name,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
              ncatted -h -O -a description,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
            fi
 
@@ -191,7 +192,6 @@ do
           ncrename -O -h -v temporary,${OUTVAR}  ${OUTFILE}
 
           rm -frv ${TEMPFILE}
-          rm -frv ${TEMPFILESHORT}
 
 
         done #parameter
