@@ -101,7 +101,7 @@ for SCEN in "${SCENARIO[@]}"
 do
 
 
-     if [[ SCEN == "historical" ]]  ; then
+     if [ ${SCEN} == "historical" ]  ; then
        export TIMECORDS=[0:1:20453]
        echo historical ${TIMECORDS}
      else
@@ -128,7 +128,7 @@ do
         for PAR in "${PARAM[@]}"
         do
 
-           if [[ PAR == "tasmax" ]]  ; then
+           if [ ${PAR} == "tasmax" ]  ; then
              export NEWPAR="esatmax"
              echo tasmax ${NEWPAR}
 
@@ -178,7 +178,7 @@ do
            ncatted -h -O -a scale_factor,temporary,m,f,1.0  ${TEMPFILE}
            ncatted -h -O -a standard_name,temporary,m,c,"water_vapor_partial_pressure_in_air_at_saturation"  ${TEMPFILE}
 
-           if [[ PAR == "tasmax" ]]  ; then
+           if [ PAR == "tasmax" ]  ; then
              ncatted -h -O -a long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
              ncatted -h -O -a description,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
            else
