@@ -103,14 +103,14 @@ do
 
            export   CLIPPED_OUTDIR=${CLIPPED_INDIR_ROOT}/derived/${SCEN}/${NEWPAR}
 
-           echo mkdir -pr ${CLIPPED_OUTDIR}
+           echo mkdir -p ${CLIPPED_OUTDIR}
 
            export INVAR=${PAR}_${ENS}_${SCEN}
            export OUTVAR=${NEWPAR}_${ENS}_${SCEN}
 
            export INFILE=${CLIPPED_INDIR}/NGP_LOCA_${PAR}_${ENS}_${SCEN}.nc
            export OUTFILE=${CLIPPED_OUTDIR}/NGP_LOCA_${NEWPAR}_${ENS}_${SCEN}.nc
-           export TEMPFILE=./temp_${OUTFILE}_${ENS}_${SCEN}.nc
+           export TEMPFILE=./temp_${NEWPAR}_${ENS}_${SCEN}.nc
 
            echo ${INFILE}
            echo ${OUTFILE}
