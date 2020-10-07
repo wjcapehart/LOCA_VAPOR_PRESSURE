@@ -15,7 +15,7 @@ HOST_NAME=`hostname`
   declare -a SCENARIO=( "historical" "rcp85" "rcp45" )
 
   declare -a SCENARIO=( "historical" )
-  declare -a    PARAM=(  "tasmin"  )
+  declare -a    PARAM=(  "tasmax"  )
 
 
   # setting the Setting the Available ensembles
@@ -111,20 +111,38 @@ do
            export INFILE=${CLIPPED_INDIR}/NGP_LOCA_${PAR}_${ENS}_${SCEN}.nc
            export OUTFILE=${CLIPPED_OUTDIR}/NGP_LOCA_${NEWPAR}_${ENS}_${SCEN}.nc
            export TEMPFILE=./temp_${NEWPAR}_${ENS}_${SCEN}.nc
+           export TEMPFILESHORT=./temp_${NEWPAR}_${ENS}_${SCEN}_short.nc
+           export TEMPFILEVAP=./temp_${NEWPAR}_${ENS}_${SCEN}_es.nc
 
-           echo ${INFILE}
-           echo ${OUTFILE}
+           ls -al ${INFILE}
+           ls -al ${OUTFILE}
 
            echo
 
-           echo ncrename -h -v ${INVAR},temporary ${INFILE} ${OUTFILE}
-           # echo nohup ncap2 --history --script 'where(temporary != 0) temporary=6.11 * exp((2.5e6 / 461) * (1 / 273 - 1 / (273.15 + temporary)))' ${OUTFILE} ${TEMPFILE}
-           echo nohup ncap2 --history --script 'where(temporary != 0) temporary=temporary+5.0' ${OUTFILE} ${TEMPFILE}
+           rm -frv ${TEMPFILE}
+           rm -frv ${TEMPFILE}
+           rm -frv ${TEMPFILESHORT}
+           rm -frv ${OUTFILE}
 
-           echo ncrename -h -v temporary,${OUTVAR} ${TEMPFILE} ${OUTFILE}
+           ncrename -O -h -v ${INVAR},temporary ${INFILE} ${TEMPFILE}
+           ncatted -h -O -a units,temporary,m,c,"Pa" ${TEMPFILE}
+           ncatted -h -O -a scale_factor,temporary,m,f,1.0  ${TEMPFILE}
+           ncatted -h -O -a standard_name,temporary,m,c,"water_vapor_partial_pressure_in_air_at_saturation"  ${TEMPFILE}
 
-           echo rm -frv ${TEMPFILE}
+           if [[ PAR == "tasmax" ]]  ; then
+             ncatted -h -O -a long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
+             ncatted -h -O -a description,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
+           else
+             ncatted -h -O -a long_name,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
+             ncatted -h -O -a description,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILE}
+           fi
 
+          nohup ncap2 --history  --script 'where(temporary > 0)  temporary=short(round( 611. * exp((2.5e6 / 461) * (1 / 273 - 1 / (273.15 + temporary*10.))) ))'  ${TEMPFILE} ${TEMPFILEVAP}
+
+          ncrename -h -v temporary,${OUTVAR} ${TEMPFILESHORT} ${OUTFILE}
+
+          rm -frv ${TEMPFILE}
+          rm -frv ${TEMPFILESHORT}
 
 
         done #parameter
