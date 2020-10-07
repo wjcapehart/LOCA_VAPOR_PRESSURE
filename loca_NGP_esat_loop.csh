@@ -152,8 +152,8 @@ do
            export TEMPFILESHORT=./temp_${NEWPAR}_${ENS}_${SCEN}_short.nc
            export TEMPFILEVAP=./temp_${NEWPAR}_${ENS}_${SCEN}_es.nc
 
-           ls -al ${INFILE}
-           ls -al ${OUTFILE}
+           echo ${INFILE}
+           echo ${OUTFILE}
 
            echo
 
@@ -163,7 +163,7 @@ do
            rm -frv ${OUTFILE}
 
            echo nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
-          nohup nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
+           nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
 
 
            ncrename -O -h -v ${INVAR},temporary  ${TEMPFILE}
