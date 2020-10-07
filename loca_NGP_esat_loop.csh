@@ -162,7 +162,8 @@ do
            rm -frv ${TEMPFILESHORT}
            rm -frv ${OUTFILE}
 
-           nohup nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE} >& ./nccopy.log
+           echo nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE} >& ./nccopy.log
+          nohup nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE} >& ./nccopy.log
 
 
            ncrename -O -h -v ${INVAR},temporary  ${TEMPFILE}
