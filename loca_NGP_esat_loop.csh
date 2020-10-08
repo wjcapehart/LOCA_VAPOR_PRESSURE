@@ -39,8 +39,7 @@ export LATCLIP="[139:1:180]"  # [  33.96875 : 1 :  52.71875]
   declare -a NEWPARAM=( "esmax", "esmin")
   declare -a SCENARIO=( "historical" "rcp85" "rcp45" )
 
-  declare -a SCENARIO=( "historical" )
-  declare -a    PARAM=(  "tasmax"  )
+
 
 
   # setting the Setting the Available ensembles
@@ -75,7 +74,6 @@ export LATCLIP="[139:1:180]"  # [  33.96875 : 1 :  52.71875]
                           "NorESM1-M_r1i1p1"
                           "bcc-csm1-1-m_r1i1p1" )
 
-                          declare -a ENSEMBLE=(   "ACCESS1-0_r1i1p1" )
 
 
 
@@ -170,12 +168,11 @@ do
            echo
 
 
-           rm -frv ${TEMPFILETMP}
-           rm -frv ${TEMPFILESUNPACK}
+          rm -frv ${TEMPFILETMP}
+          rm -frv ${TEMPFILESUNPACK}
 
-           rm -frv ${TEMPFILEVAPUNPACK}
-           rm -frv ${TEMPFILEVAPUNPACK_FILL}
-           rm -frv ${TEMPFILEVAP}
+          rm -frv ${TEMPFILEVAPUNPACK}
+          rm -frv ${TEMPFILEVAP}
            rm -frv ${OUTFILE}
 
            #echo nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
@@ -256,9 +253,11 @@ do
            echo mv  -v  ${TEMPFILEVAP}  ${OUTFILE}
                 mv  -v  ${TEMPFILEVAP}  ${OUTFILE}
            echo
+           rm -frv ${TEMPFILETMP}
+           rm -frv ${TEMPFILESUNPACK}
 
-           #echo rm -frv ${TEMPFILEVAP}
-          #      rm -frv ${TEMPFILEVAP}
+           rm -frv ${TEMPFILEVAPUNPACK}
+           rm -frv ${TEMPFILEVAP}
            echo
            echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
