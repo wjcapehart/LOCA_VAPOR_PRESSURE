@@ -194,11 +194,15 @@ do
             echo ncap2 --history --deflate 8 --script 'where(temporary > -300)  temporary=round( 611. * exp((2.5e6 / 461) * (1. / 273.15 - 1. / (273.15 + temporary))) )'  ${TEMPFILESUNPACK}  ${TEMPFILEVAPUNPACK}
                  ncap2 --history --deflate 8 --script 'where(temporary > -300)  temporary=round( 611. * exp((2.5e6 / 461) * (1. / 273.15 - 1. / (273.15 + temporary))) )'  ${TEMPFILESUNPACK}  ${TEMPFILEVAPUNPACK}
 
+            echo ncap2 --history --deflate 8 --script 'where(temporary < -300)  temporary=-32767'  ${TEMPFILESUNPACK}  ${TEMPFILEVAPUNPACK}
+                 ncap2 --history --deflate 8 --script 'where(temporary < -300)  temporary=-32767'  ${TEMPFILESUNPACK}  ${TEMPFILEVAPUNPACK}
+
+
             echo ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILEVAPUNPACK}  ${TEMPFILEVAP}
                  ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILEVAPUNPACK}  ${TEMPFILEVAP}
 
-            echo ncatted -h -O -a _FillValue,${VARNAME},m,s,-32767    ${TEMPFILEVAP}
-                 ncatted -h -O -a _FillValue,${VARNAME},m,s,-32767    ${TEMPFILEVAP}
+            echo ncatted -h -O -a _FillValue,temporary,m,s,-32767    ${TEMPFILEVAP}
+                 ncatted -h -O -a _FillValue,temporary,m,s,-32767    ${TEMPFILEVAP}
 
             echo rm -frv ${TEMPFILEVAP}
                  rm -frv ${TEMPFILEVAP}
