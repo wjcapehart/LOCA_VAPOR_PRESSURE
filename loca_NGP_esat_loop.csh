@@ -206,8 +206,8 @@ do
             #     ncap2 --history --deflate 8 --script 'where(temporary < -300)  temporary=-32767'  ${TEMPFILESUNPACK}  ${TEMPFILEVAPUNPACK_FILL}
 
             echo
-            echo ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILEVAPUNPACK_FILL}  ${TEMPFILEVAP}
-                 ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILEVAPUNPACK_FILL}  ${TEMPFILEVAP}
+            echo ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILESUNPACK}  ${TEMPFILEVAP}
+                 ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILESUNPACK}  ${TEMPFILEVAP}
 
             echo
             echo ncatted -h -O -a _FillValue,temporary,m,s,-32767    ${TEMPFILEVAP}
