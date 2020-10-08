@@ -156,68 +156,88 @@ do
 
            export INFILE=${CLIPPED_INDIR}/NGP_LOCA_${PAR}_${ENS}_${SCEN}.nc
            export OUTFILE=${CLIPPED_OUTDIR}/CHEYENNE_LOCA_${NEWPAR}_${ENS}_${SCEN}.nc
-           export TEMPFILE=./temp_${NEWPAR}_${ENS}_${SCEN}.nc
-           export TEMPFILESUNPACK=./temp_${NEWPAR}_${ENS}_${SCEN}_unpack.nc
-           export TEMPFILEVAP=./temp_${NEWPAR}_${ENS}_${SCEN}_es.nc
+
+           export TEMPFILETMP=./temp_${PAR}_${ENS}_${SCEN}.nc
+           export TEMPFILESUNPACK=./temp_${PAR}_${ENS}_${SCEN}_unpack.nc
+
+           export TEMPFILEVAPUNPACK=./temp_${NEWPAR}_${ENS}_${SCEN}_unpack.nc
+           export TEMPFILEVAP=./temp_${NEWPAR}_${ENS}_${SCEN}.nc
 
            echo ${INFILE}
            echo ${OUTFILE}
 
            echo
 
-           rm -frv ${TEMPFILE}
-           rm -frv ${TEMPFILESUNPACK}
            rm -frv ${OUTFILE}
+
+           rm -frv ${TEMPFILETMP}
+           rm -frv ${TEMPFILESUNPACK}
+
+           rm -frv ${TEMPFILEVAPUNPACK}
+           rm -frv ${TEMPFILEVAP}
 
            #echo nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
            #      nccopy -4 -d 8 ${INFILE}?${ALWAYS_GET_US},${INVAR}${TYX_COORDS}  ${TEMPFILE}
 
-            echo ncks -d lat,42.65625,45.21875 -d lon,-106.09375,-101.21875 ${INFILE} ${TEMPFILE}
-                 ncks -d lat,42.65625,45.21875 -d lon,-106.09375,-101.21875 ${INFILE} ${TEMPFILE}
+            echo ncks -d lat,42.65625,45.21875 -d lon,-106.09375,-101.21875 ${INFILE} ${TEMPFILETMP}
+                 ncks -d lat,42.65625,45.21875 -d lon,-106.09375,-101.21875 ${INFILE} ${TEMPFILETMP}
 
-            echo ncpdq -h -U  ${TEMPFILE} ${TEMPFILESUNPACK}
-                 ncpdq -h -U  ${TEMPFILE} ${TEMPFILESUNPACK}
+            echo ncpdq -h -U  ${TEMPFILETMP} ${TEMPFILESUNPACK}
+                 ncpdq -h -U  ${TEMPFILETMP} ${TEMPFILESUNPACK}
 
-            echo rm -frv ${TEMPFILE}
-                 rm -frv ${TEMPFILE}
+            echo rm -frv ${TEMPFILETMP}
+                 rm -frv ${TEMPFILETMP}
 
             echo ncrename -O -h -v ${INVAR},temporary  ${TEMPFILESUNPACK}
                  ncrename -O -h -v ${INVAR},temporary  ${TEMPFILESUNPACK}
 
-            echo ncatted -h -O -a units,temporary,m,c,"Pa" ${TEMPFILESUNPACK}
-                 ncatted -h -O -a units,temporary,m,c,"Pa" ${TEMPFILESUNPACK}
+            echo ncap2 --history --deflate 8 --script 'where(temporary > -300)  temporary=round( 611. * exp((2.5e6 / 461) * (1. / 273.15 - 1. / (273.15 + temporary))) )'  ${TEMPFILESUNPACK}  ${TEMPFILEVAPUNPACK}
+                 ncap2 --history --deflate 8 --script 'where(temporary > -300)  temporary=round( 611. * exp((2.5e6 / 461) * (1. / 273.15 - 1. / (273.15 + temporary))) )'  ${TEMPFILESUNPACK}  ${TEMPFILEVAPUNPACK}
 
-            echo ncatted -h -O -a standard_name,temporary,m,c,"water_vapor_partial_pressure_in_air_at_saturation"  ${TEMPFILESUNPACK}
-                 ncatted -h -O -a standard_name,temporary,m,c,"water_vapor_partial_pressure_in_air_at_saturation"  ${TEMPFILESUNPACK}
+            echo ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILEVAPUNPACK}  ${TEMPFILEVAP}
+                 ncap2 --history --deflate 8 --script 'temporary=short(round(temporary))'  ${TEMPFILEVAPUNPACK}  ${TEMPFILEVAP}
+
+            echo ncatted -h -O -a _FillValue,${VARNAME},m,s,-32767    ${TEMPFILEVAP}
+                 ncatted -h -O -a _FillValue,${VARNAME},m,s,-32767    ${TEMPFILEVAP}
+
+            echo rm -frv ${TEMPFILEVAP}
+                 rm -frv ${TEMPFILEVAP}
+
+            echo ncatted -h -O -a scale_factor,temporary,m,f,1.0  ${TEMPFILEVAP}
+                 ncatted -h -O -a scale_factor,temporary,m,f,1.0  ${TEMPFILEVAP}
+
+            echo ncatted -h -O -a add_offset,temporary,c,f,0.0    ${TEMPFILEVAP}
+                 ncatted -h -O -a add_offset,temporary,c,f,0.0    ${TEMPFILEVAP}
+
+            echo ncatted -h -O -a units,temporary,m,c,"Pa" ${TEMPFILEVAP}
+                 ncatted -h -O -a units,temporary,m,c,"Pa" ${TEMPFILEVAP}
+
+            echo ncatted -h -O -a standard_name,temporary,m,c,"water_vapor_partial_pressure_in_air_at_saturation"  ${TEMPFILEVAP}
+                 ncatted -h -O -a standard_name,temporary,m,c,"water_vapor_partial_pressure_in_air_at_saturation"  ${TEMPFILEVAP}
 
            if [ PAR == "tasmax" ]  ; then
-              echo ncatted -h -O -a   long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
-                   ncatted -h -O -a   long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
-              echo ncatted -h -O -a description,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
-                   ncatted -h -O -a description,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
+              echo ncatted -h -O -a   long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
+                   ncatted -h -O -a   long_name,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
+              echo ncatted -h -O -a description,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
+                   ncatted -h -O -a description,temporary,m,c,"Maximum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
            else
-              echo ncatted -h -O -a   long_name,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
-                   ncatted -h -O -a   long_name,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
-              echo ncatted -h -O -a description,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
-                   ncatted -h -O -a description,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILESUNPACK}
+              echo ncatted -h -O -a   long_name,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
+                   ncatted -h -O -a   long_name,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
+              echo ncatted -h -O -a description,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
+                   ncatted -h -O -a description,temporary,m,c,"Minimum Daily Equilibrium Vapor Pressure"  ${TEMPFILEVAP}
            fi
 
-           echo nohup ncap2 --history --deflate 8 --script 'where(temporary > -300)  temporary=short(round( 611. * exp((2.5e6 / 461) * (1 / 273 - 1 / (273.15 + temporary))) ))'  ${TEMPFILESUNPACK}  ${OUTFILE}
-                nohup ncap2 --history --deflate 8 --script 'where(temporary > -300)  temporary=short(round( 611. * exp((2.5e6 / 461) * (1 / 273 - 1 / (273.15 + temporary))) ))'  ${TEMPFILESUNPACK}  ${OUTFILE}
-
-           echo rm -frv ${TEMPFILESUNPACK}
-                rm -frv ${TEMPFILESUNPACK}
-
-           echo ncatted -h -O -a scale_factor,temporary,m,f,1.0  ${OUTFILE}
-                ncatted -h -O -a scale_factor,temporary,m,f,1.0  ${OUTFILE}
-
-           echo ncatted -h -O -a add_offset,temporary,c,f,0.0    ${OUTFILE}
-                ncatted -h -O -a add_offset,temporary,c,f,0.0    ${OUTFILE}
-
-           echo ncrename -O -h -v temporary,${OUTVAR}  ${OUTFILE}
-                ncrename -O -h -v temporary,${OUTVAR}  ${OUTFILE}
 
 
+
+           echo ncrename -O -h -v temporary,${OUTVAR}  ${TEMPFILEVAP}
+                ncrename -O -h -v temporary,${OUTVAR}  ${TEMPFILEVAP}
+
+           echo mv  -v  ${TEMPFILEVAP}  ${OUTFILE}
+                mv  -v  ${TEMPFILEVAP}  ${OUTFILE}
+
+           echo rm -frv ${TEMPFILEVAP}
+                rm -frv ${TEMPFILEVAP}
 
         done #parameter
         echo
